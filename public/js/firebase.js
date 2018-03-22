@@ -96,7 +96,7 @@ var getAllTasksByDepartment = function (department) {
                         tasks.push({
                             id: snapshot.key,
                             name: snapshot.val().name,
-                            flow: snapshot2.val().flowName
+                            flow: snapshot2.val().flowName,
                         });
                     });
                 resolve(tasks);
@@ -119,7 +119,7 @@ var getFlowByID = function (id) {
         try {
             var flowRef = getRef().child('Flows/'+id);
             flowRef.on('value', function (snapshot) {
-                resolve({name: snapshot.val().flowName})
+                resolve({name: snapshot.val().flowName});
             });
         }catch (error){
             console.log(error);
@@ -176,18 +176,9 @@ var getCheckedTasks = function (department, date) {
                                                 .on('value', function (snapshot3) {
                                                     checked_tasks[checked_tasks.length-1]['task'][checked_tasks[checked_tasks.length-1]['task'].length-1]['name'] = snapshot3.val().name;
                                                 });
-                                            //console.log(snapshot2.val().task[j].id);
                                         }
                                     }
                                 }else{
-                                    // for(var m=0; m<snapshot2.val().task.length; m++){
-                                    //     console.log(snapshot2.val().task[m].id);
-                                    //     getRef().child('Tasks/'+snapshot2.val().task[m].id)
-                                    //         .on('value', function (snapshot4) {
-                                    //             snapshot2.val().task[m]['name'] = snapshot4.val().name;
-                                    //         });
-                                    //
-                                    // }
                                     checked_tasks.push(snapshot2.val());
                                     for(var m=0; m<checked_tasks.length; m++){
                                         for(var n=0; n<checked_tasks[m].task.length; n++){
@@ -204,10 +195,6 @@ var getCheckedTasks = function (department, date) {
                                         });
                                 }
                             }
-                            // for(var i=0; i<checked_tasks.length-1; i++){
-                            //     console.log(checked_tasks[i].task);
-                            //     console.log(checked_tasks.length);
-                            // }
                             resolve(checked_tasks);
                         });
                 });

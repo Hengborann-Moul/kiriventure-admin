@@ -415,6 +415,6 @@
     <script src="{{asset('js/preview/modal.min.js')}}"></script>
     <script src="{{asset('js/preview/datepicker.min.js')}}"></script>
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
-    <script src="{{asset('js/firebase.min.js')}}"></script>
+    <script src="{{asset('js/firebase.js')}}"></script>
     <script src="{{asset('js/customFirebase.min.js')}}"></script>
 @endpush
