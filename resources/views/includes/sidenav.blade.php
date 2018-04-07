@@ -33,7 +33,7 @@
                         <li class="sidebar-subnav__item"><a class="sidebar-subnav__link" href="/department/-L5iedxWWfwuJ9fENETW/">F&B</a></li>
                         <li class="sidebar-subnav__item"><a class="sidebar-subnav__link" href="/department/-L5ieh5nqjaWdk1xvx4t/">HouseKeeping</a></li>
                         <li class="sidebar-subnav__item"><a class="sidebar-subnav__link" href="/department/-L5iejzu0vNns3yNjkCy/">General Manager</a></li>
-                        <li class="sidebar-subnav__item"><a class="sidebar-subnav__link" href="/department/-L78iIyWqNuqjwomY78q/">Operation Manager</a></li>
+                        <li class="sidebar-subnav__item"><a class="sidebar-subnav__link" href="/department/-L9IzEBrniySDJfkYu8T/">Operation Manager</a></li>
                     </ul>
                 </li>
                 <li class="sidebar-nav__item">

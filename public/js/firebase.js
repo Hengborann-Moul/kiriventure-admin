@@ -93,11 +93,13 @@ var getAllTasksByDepartment = function (department) {
             taskRef.on('child_added', function (snapshot) {
                 getRef().child('Flows/'+snapshot.val().flow)
                     .on('value', function (snapshot2) {
-                        tasks.push({
-                            id: snapshot.key,
-                            name: snapshot.val().name,
-                            flow: snapshot2.val().flowName,
-                        });
+                        if(snapshot2.val()){
+                            tasks.push({
+                                id: snapshot.key,
+                                name: snapshot.val().name,
+                                flow: snapshot2.val().flowName
+                            });
+                        } 
                     });
                 resolve(tasks);
             });
@@ -160,7 +162,7 @@ var getAllMemberByDepartment = function (department) {
 
 var getCheckedTasks = function (department, date) {
     var checked_tasks = [];
-    var pre_key = null;
+    var pre_key = [];
     return new Promise(function (resolve, reject) {
         try{
             getRef().child('Users').orderByChild('department').equalTo(department)
@@ -168,18 +170,9 @@ var getCheckedTasks = function (department, date) {
                     getRef().child('Ratings').orderByChild('data').equalTo(date)
                         .on('child_added', function (snapshot2) {
                             if(snapshot.key === snapshot2.val().user){
-                                if(pre_key === snapshot2.val().user){
-                                    if(snapshot2.val().task){
-                                        for(var j =0; j<snapshot2.val().task.length; j++){
-                                            checked_tasks[checked_tasks.length -1]['task'].push(snapshot2.val().task[j]);
-                                            getRef().child('Tasks/'+snapshot2.val().task[j].id)
-                                                .on('value', function (snapshot3) {
-                                                    checked_tasks[checked_tasks.length-1]['task'][checked_tasks[checked_tasks.length-1]['task'].length-1]['name'] = snapshot3.val().name;
-                                                });
-                                        }
-                                    }
-                                }else{
+                                if(pre_key.length === 0){
                                     checked_tasks.push(snapshot2.val());
+                                    checked_tasks[checked_tasks.length-1]['review'] = "";
                                     for(var m=0; m<checked_tasks.length; m++){
                                         for(var n=0; n<checked_tasks[m].task.length; n++){
                                             getRef().child('Tasks/'+checked_tasks[m].task[n].id)
@@ -188,11 +181,43 @@ var getCheckedTasks = function (department, date) {
                                                 });
                                         }
                                     }
-                                    pre_key = snapshot2.val().user;
+                                    pre_key.push(snapshot2.val().user);
                                     getRef().child('Users/'+snapshot2.val().user)
                                         .on('value', function (snapshot3) {
                                             checked_tasks[checked_tasks.length -1]['username'] = snapshot3.val().name;
                                         });
+                                }else{
+                                    if(pre_key.indexOf(snapshot2.val().user) >= 0 ) {
+                                        checked_tasks.forEach(function(item, index) {
+                                            if(item['user'] === snapshot2.val().user){
+                                                if(snapshot2.val().task){
+                                                    for(var j =0; j<snapshot2.val().task.length; j++){
+                                                        checked_tasks[index]['task'].push(snapshot2.val().task[j]);
+                                                        getRef().child('Tasks/'+snapshot2.val().task[j].id)
+                                                            .on('value', function (snapshot3) {
+                                                                checked_tasks[index]['task'][checked_tasks[index]['task'].length-1]['name'] = snapshot3.val().name;
+                                                            });
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }else{
+                                        checked_tasks.push(snapshot2.val());
+                                        checked_tasks[checked_tasks.length-1]['review'] = "";
+                                        for(var m=0; m<checked_tasks.length; m++){
+                                            for(var n=0; n<checked_tasks[m].task.length; n++){
+                                                getRef().child('Tasks/'+checked_tasks[m].task[n].id)
+                                                    .on('value', function (snapshot4) {
+                                                        checked_tasks[m].task[n]['name'] = snapshot4.val().name;
+                                                    });
+                                            }
+                                        }
+                                        pre_key.push(snapshot2.val().user);
+                                        getRef().child('Users/'+snapshot2.val().user)
+                                            .on('value', function (snapshot3) {
+                                                checked_tasks[checked_tasks.length -1]['username'] = snapshot3.val().name;
+                                            });
+                                    }
                                 }
                             }
                             resolve(checked_tasks);

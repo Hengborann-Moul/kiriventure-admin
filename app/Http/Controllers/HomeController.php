@@ -30,7 +30,7 @@ class HomeController extends Controller
             return View('home');
         }
         Auth::logout();
-        return View('auth.login');
+        return redirect('/login');
 
     }
 

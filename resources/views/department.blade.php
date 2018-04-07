@@ -10,11 +10,15 @@
 
 @section('content')
     @if($department)
-        <input type="hidden" name="depID" id="depID" value="{{$department}}" />
+        <input type="hidden" name="depID" id="depID" value="{{$department}}" data-name="{{$name}}" />
     @endif
     <div class="page-content">
         <div class="container-fluid">
-            <h2 class="content-heading">Activity</h2>
+            @if($name)
+                <h2 class="content-heading">{{$name}}</h2>
+            @else
+                <h2 class="content-heading">Department's Name</h2>
+            @endif
             <div class="main-container tabs-alpha">
                 <ul class="nav nav-tabs tabs-alpha__nav-tabs">
                     <li class="nav-item tabs-alpha__item">
@@ -113,6 +117,7 @@
                                                 <th>N%</th>
                                                 <th>Name</th>
                                                 <th>Tasks</th>
+                                                <th>Review</th>
                                                 <th><input style="width: 190px;" name="retrieve_Date" class="form-control flatpickr" data-default-date="today" data-max-date="today" data-date-format="d/m/Y" placeholder="select a Date"></th>
                                             </tr>
                                         </thead>
@@ -274,7 +279,7 @@
                                     <label for="rating">Rating</label>
                                     <select name="rating" id="rating" data-placeholder="Select Rating">
                                         <option value=""></option>
-                                        <option value="1">Terrible</option>
+                                        <option value="1">Poor</option>
                                         <option value="2">Okay</option>
                                         <option value="3">Fine</option>
                                         <option value="4">Good</option>
@@ -416,5 +421,5 @@
     <script src="{{asset('js/preview/datepicker.min.js')}}"></script>
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <script src="{{asset('js/firebase.js')}}"></script>
-    <script src="{{asset('js/customFirebase.min.js')}}"></script>
+    <script src="{{asset('js/customFirebase.js')}}"></script>
 @endpush

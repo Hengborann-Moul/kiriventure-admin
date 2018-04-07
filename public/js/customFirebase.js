@@ -22,6 +22,7 @@ $(document).ready(function () {
     var task_review = [];
     var date_review = '';
     var user_review = '';
+    var current_review_index = '';
     var today = $('input[name=retrieve_Date]').val();
 
     getAllFlowsByDepartmet(departmentID).then(function (value) {
@@ -90,7 +91,7 @@ $(document).ready(function () {
                 for(var i=0; i<value.length; i++){
                     task_review.push(value[i].task);
                     $('#core_checkedTask')
-                        .append("<tr><td>"+parseInt(1+i)+"</td><td>"+value[i].username+"</td><td>"+value[i].task.length+"</td><td class=\"table__cell-actions\">\n" +
+                        .append("<tr><td>"+parseInt(1+i)+"</td><td>"+value[i].username+"</td><td>"+value[i].task.length+"</td><td user-review=\""+ value[i].user +"\">" + (value[i].review?value[i].review+'/5':'not yet review') + "</td><td class=\"table__cell-actions\">\n" +
                             "                                                <div class=\"table__cell-actions-wrap\">\n" +
                             "                                                    <button name=\"btnReviewTask\" data-Date='"+value[i].data+"' data-ratingUser='"+value[i].user+"' data-index='"+i+"' class=\"btn btn-info table__cell-actions-item\">Review</button>\n" +
                             "                                                </div>\n" +
@@ -137,7 +138,7 @@ $(document).ready(function () {
         var flowTask = $('#flowTask').val();
         if((taskName.trim() === '') || (flowTask.trim()==='')){
             $.confirm({
-                title: 'All Fields is Required!',
+                title: 'All Fields are Required!',
                 content: 'Pleas input all the fields.',
                 type: 'danger',
                 buttons: {
@@ -161,6 +162,7 @@ $(document).ready(function () {
                                 btnClass: 'btn-success',
                                 action: function () {
                                     $('#modal-Task').modal('toggle');
+                                    location.reload();
                                 }
                             }
                         }
@@ -276,7 +278,6 @@ $(document).ready(function () {
         var trRef = $(this).parent().parent().parent();
         deleteTask(taskID)
             .then(function (value) {
-                console.log(value);
                 $.confirm({
                     title: 'Data Deleted!',
                     content: 'Data successfully deleted!',
@@ -608,9 +609,9 @@ $(document).ready(function () {
      */
     $(document).on('click', 'button[name=btnReviewTask]', function (e) {
         e.preventDefault();
-        var review_checked_task = task_review[$(this).attr('data-index')];
-        var active_star = "<span class=\"table__rating-item iconfont iconfont-star is-active\"></span>";
-        var blank_star = "<span class=\"table__rating-item iconfont iconfont-star\"></span>";
+        current_review_index = $(this).attr('data-index');
+        var review_checked_task = task_review[current_review_index];
+        console.log('this is current index: ', current_review_index);
         user_review = $(this).attr('data-ratingUser');
         date_review = $(this).attr('data-Date');
         $('#review_ckeck_tasks').each(function () {
@@ -618,7 +619,6 @@ $(document).ready(function () {
         });
 
         for(var i=0; i<review_checked_task.length; i++){
-            console.log(review_checked_task[i].rating);
             $('#review_ckeck_tasks')
                 .append("<tr><td>"+parseInt(1+i)+"</td><td>"+review_checked_task[i].name+"</td><td>"+review_checked_task[i].rating+"/5</td></tr>");
         }
@@ -641,6 +641,7 @@ $(document).ready(function () {
                             btnClass: 'btn-success',
                             action: function () {
                                 $('#review_Tasks').modal('toggle');
+                                $('td[user-review='+ user_review +']').text(rating + '/5');
                             }
                         }
                     }
@@ -663,6 +664,7 @@ $(document).ready(function () {
     $('input[name=retrieve_Date]').on('change', function (e) {
         e.preventDefault();
         today = $(this).val();
+        task_review = [];
         core_checked_task();
     });
 
